@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: Hannah Wudke
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -32,11 +32,20 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 
 ```{r basics 1}
 #1. 
-
+one_to_fiftyfive_by_five_sequence <- seq(1, 55, 5)
+one_to_fiftyfive_by_five_sequence
+# here, I created the sequence by using seq(1, 55, 5), where 1 is from, 55 is to, and BY intervals of 5. In the same line, I named this sequence one_to_fiftyfive_by_five_sequence for clarity on what the function does. 
+  
 #2. 
+mean(one_to_fiftyfive_by_five_sequence)
+median(one_to_fiftyfive_by_five_sequence)
+# here, I used the basic commands mean(one_to_fiftyfive_by_five_sequence) and median(one_to_fiftyfive_by_five_sequence) to calculate the mean and median of my sequence, which I previously named one_to_fiftyfive_by_five_sequence.
 
 #3. 
+mean(one_to_fiftyfive_by_five_sequence) > median(one_to_fiftyfive_by_five_sequence)
+median(one_to_fiftyfive_by_five_sequence) > mean(one_to_fiftyfive_by_five_sequence)
 
+# Here, I typed both possible outcomes. Either the mean is greater than the median of my sequence, or the median is greater than the mean. Because R shows the outcomes of these conditional statements, I can easily see which is greater. Both statements were false, so the mean and median must be equal. 
 ```
 
 ## Basics, Part 2
@@ -51,12 +60,22 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 
 ```{r basics 2}
 
+#5 and 6.
+vector_student_names <- c("Adam", "Brian", "Carter", "David") # vector type = character
+vector_test_scores <- c(90, 75, 80, 50) # vector type = double
+vector_scholarship_status <- c(TRUE, TRUE, FALSE, FALSE) # vector type = logical
+
+#7.
+Student_Data_Frame <- data.frame(vector_student_names, vector_test_scores, vector_scholarship_status)
+
+#8.
+names(Student_Data_Frame) <- c("Student Names", "Test Scores", "Scholarship Status")
 
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer: Although they arguably look the same, they are different because a matrix can only include a singular data type, whereas a data frame can contain multiple. For example, a data table can contain numerical data, as well as true/false statements. If a matrix contained numerical data, it could only contain numerical data. 
 
 10. Create a function with one input. In this function, use `if`...`else` to evaluate the value of the input: if it is greater than 50, print the word "Pass"; otherwise print the word "Fail". 
 
@@ -68,21 +87,36 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 
 ```{r basics 3}
 #10. Create a function using if...else
+x <- vector_test_scores
+pass_fail_function <- function(x)
+  if (x>50) {print("PASS")} else if (x<50) {print("FAIL")}
 
 #11. Create a function using ifelse()
+x <- vector_test_scores
+pass_fail_function_ifelse <- function(x)
+  ifelse(x>50, "PASS", "FAIL")
 
 #12a. Run the first function with the value 52.5
 
+pass_fail_function(52.5)
+
 #12b. Run the second function with the value 52.5
+
+pass_fail_function_ifelse(52.5)
 
 #13a. Run the first function with the vector of test scores
 
+#this comment is to call out that this function does not work: pass_fail_function(vector_test_scores)
+
 #13b. Run the second function with the vector of test scores
+
+pass_fail_function_ifelse(vector_test_scores)
+
 ```
 
 14. QUESTION: Which option of `if`...`else` vs. `ifelse` worked? Why? (Hint: search the web for "R vectorization")
 
-> Answer:
+> Answer: ifelse worked! ifelse is essentially a vectorized version of if...else. Ifelse can run through an entire vector at once, rather than each individual value in the vector. 
 
 
 **NOTE** Before knitting, you'll need to comment out the call to the function in Q13 that does not work. (A document can't knit if the code it contains causes an error!)
