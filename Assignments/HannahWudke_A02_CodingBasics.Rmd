@@ -34,18 +34,24 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 #1. 
 one_to_fiftyfive_by_five_sequence <- seq(1, 55, 5)
 one_to_fiftyfive_by_five_sequence
-# here, I created the sequence by using seq(1, 55, 5), where 1 is from, 55 is to, and BY intervals of 5. In the same line, I named this sequence one_to_fiftyfive_by_five_sequence for clarity on what the function does. 
+# Here, I used seq(from, to, by), to create a sequence from 1 to 55, in fives
   
 #2. 
 mean(one_to_fiftyfive_by_five_sequence)
 median(one_to_fiftyfive_by_five_sequence)
-# here, I used the basic commands mean(one_to_fiftyfive_by_five_sequence) and median(one_to_fiftyfive_by_five_sequence) to calculate the mean and median of my sequence, which I previously named one_to_fiftyfive_by_five_sequence.
+# here, I used the basic commands mean(one_to_fiftyfive_by_five_sequence) and
+# median(one_to_fiftyfive_by_five_sequence) to calculate the mean and median of
+# my sequence, which I previously named one_to_fiftyfive_by_five_sequence.
 
 #3. 
 mean(one_to_fiftyfive_by_five_sequence) > median(one_to_fiftyfive_by_five_sequence)
 median(one_to_fiftyfive_by_five_sequence) > mean(one_to_fiftyfive_by_five_sequence)
 
-# Here, I typed both possible outcomes. Either the mean is greater than the median of my sequence, or the median is greater than the mean. Because R shows the outcomes of these conditional statements, I can easily see which is greater. Both statements were false, so the mean and median must be equal. 
+# Here, I typed both possible outcomes. Either the mean is greater than the 
+# median of my sequence, or the median is greater than the mean. 
+# Because R shows the outcomes of these conditional statements, 
+# I can easily see which is greater. 
+# Both statements were false, so the mean and median must be equal. 
 ```
 
 ## Basics, Part 2
@@ -61,12 +67,16 @@ median(one_to_fiftyfive_by_five_sequence) > mean(one_to_fiftyfive_by_five_sequen
 ```{r basics 2}
 
 #5 and 6.
-vector_student_names <- c("Adam", "Brian", "Carter", "David") # vector type = character
-vector_test_scores <- c(90, 75, 80, 50) # vector type = double
-vector_scholarship_status <- c(TRUE, TRUE, FALSE, FALSE) # vector type = logical
+vector_student_names <- c("Adam", "Brian", "Carter", "David") 
+# vector type = character
+vector_test_scores <- c(90, 75, 80, 50) 
+# vector type = double
+vector_scholarship_status <- c(TRUE, TRUE, FALSE, FALSE) 
+# vector type = logical
 
 #7.
-Student_Data_Frame <- data.frame(vector_student_names, vector_test_scores, vector_scholarship_status)
+Student_Data_Frame <- data.frame(vector_student_names, 
+                                 vector_test_scores, vector_scholarship_status)
 
 #8.
 names(Student_Data_Frame) <- c("Student Names", "Test Scores", "Scholarship Status")
@@ -106,7 +116,8 @@ pass_fail_function_ifelse(52.5)
 
 #13a. Run the first function with the vector of test scores
 
-#this comment is to call out that this function does not work: pass_fail_function(vector_test_scores)
+#this comment is to call out that this function does not work:
+# pass_fail_function(vector_test_scores)
 
 #13b. Run the second function with the vector of test scores
 
