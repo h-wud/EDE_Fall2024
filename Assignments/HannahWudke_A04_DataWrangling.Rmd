@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling (Fall 2024)"
-author: "Student Name"
+author: Hannah Wudke
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -31,17 +31,31 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 
 ```{r setup, message = FALSE}
 #1a 
-
+library(tidyverse)
+library(lubridate)
+library(here)
 #1b 
-
+getwd()
+here()
 #1c 
-
+EPA_Air_O3_2018 <- read.csv(file = here("./Data/Raw/EPAair_O3_NC2018_raw.csv"),
+                            stringsAsFactors = TRUE)
+EPA_Air_O3_2019 <- read.csv(file = here("./Data/Raw/EPAair_O3_NC2019_raw.csv"),
+                            stringsAsFactors = TRUE)
+EPA_Air_PM25_2018 <- read.csv(file = here("./Data/Raw/EPAair_PM25_NC2018_raw.csv"),
+                              stringsAsFactors = TRUE)
+EPA_Air_PM25_2019 <- read.csv(file = here("./Data/Raw/EPAair_PM25_NC2019_raw.csv"),
+                              stringsAsFactors = TRUE)
 #2 
-
+dim(EPA_Air_O3_2018)
+dim(EPA_Air_O3_2019)
+dim(EPA_Air_PM25_2018)
+dim(EPA_Air_PM25_2019)
 
 ```
 
->All four datasets should have the same number of columns but unique record counts (rows). Do your datasets follow this pattern?
+>All four datasets should have the same number of columns but unique record counts (rows). Do your datasets follow this pattern? 
+Yes, my datasets follow this pattern. 
 
 
 ## Wrangle individual datasets to create processed files.
@@ -56,16 +70,46 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 
 ```{r questions 3 thru 4}
 #3
+EPA_Air_O3_2018$Date <- as.Date(EPA_Air_O3_2018$Date, format = "%m/%d/%Y")
+EPA_Air_O3_2019$Date <- as.Date(EPA_Air_O3_2019$Date, format = "%m/%d/%Y")
+EPA_Air_PM25_2018$Date <- as.Date(EPA_Air_PM25_2018$Date, format = "%m/%d/%Y")
+EPA_Air_PM25_2019$Date <- as.Date(EPA_Air_PM25_2019$Date, format = "%m/%d/%Y")
 
+class(EPA_Air_O3_2018$Date)
+class(EPA_Air_O3_2019$Date)
+class(EPA_Air_PM25_2018$Date)
+class(EPA_Air_PM25_2019$Date)
 
 #4
-
+EPA_Air_O3_2018_selected <- select(EPA_Air_O3_2018, Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC,
+                                   COUNTY:SITE_LONGITUDE)
+EPA_Air_O3_2019_selected <- select(EPA_Air_O3_2019, Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC,
+                                   COUNTY:SITE_LONGITUDE)
+EPA_Air_PM25_2018_selected <- select(EPA_Air_PM25_2018, Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC,
+                                   COUNTY:SITE_LONGITUDE)
+EPA_Air_PM25_2019_selected <- select(EPA_Air_PM25_2019, Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC,
+                                   COUNTY:SITE_LONGITUDE)
 
 #5
 
+EPA_Air_PM25_2018_unit_correction <- 
+  EPA_Air_PM25_2018_selected %>% mutate(AQS_PARAMETER_DESC = "PM2.5")
+EPA_Air_PM25_2019_unit_correction <- 
+  EPA_Air_PM25_2019_selected %>% mutate(AQS_PARAMETER_DESC = "PM2.5")
 
 #6
-
+write.csv(EPA_Air_O3_2018_selected,
+row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_Selected_Processed.csv")
+write.csv(EPA_Air_O3_2019_selected,
+row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_Selected_Processed.csv")
+write.csv(EPA_Air_PM25_2018_unit_correction,
+row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2018_Selected_Processed.csv")
+write.csv(EPA_Air_PM25_2019_unit_correction,
+row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2019_Selected_Processed.csv")
 ```
 
 
@@ -98,19 +142,42 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 
 ```{r questions 7 thru 11}
 #7 
+EPA_AIR_O3_NC2018_PROCESSED <- 
+  read.csv("./Data/Processed/EPAair_O3_NC2018_Selected_Processed.csv", 
+           stringsAsFactors = TRUE)
+EPA_AIR_O3_NC2019_PROCESSED <- 
+  read.csv("./Data/Processed/EPAair_O3_NC2019_Selected_Processed.csv", 
+           stringsAsFactors = TRUE)
+EPA_AIR_PM25_NC2018_PROCESSED <- 
+  read.csv("./Data/Processed/EPAair_PM25_NC2018_Selected_Processed.csv", 
+           stringsAsFactors = TRUE)
+EPA_AIR_PM25_NC2019_PROCESSED <- 
+  read.csv("./Data/Processed/EPAair_PM25_NC2019_Selected_Processed.csv", 
+           stringsAsFactors = TRUE)
 
-
+EPA_AIR_BOUND <- rbind(EPA_AIR_O3_NC2018_PROCESSED, EPA_AIR_O3_NC2019_PROCESSED,
+                    EPA_AIR_PM25_NC2018_PROCESSED, EPA_AIR_PM25_NC2019_PROCESSED)
 #8 
-
+EPA_AIR_BOUND_TEMP <- EPA_AIR_BOUND  %>% 
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett",
+  "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain",
+  "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center",
+  "Bryson City", "Millbrook School")) %>% 
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>% 
+  summarise(meanAQI = mean(DAILY_AQI_VALUE),
+            meanLAT = mean(SITE_LATITUDE), meanLONG = mean(SITE_LONGITUDE)) %>%
+  mutate(month = month(Date), year = year(Date))
 
 #9
-
+EPA_AIR_BOUND_TEMP_OZONEPM2.5 <- EPA_AIR_BOUND_TEMP %>%
+  pivot_wider(names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
 
 #10
-
+dim(EPA_AIR_BOUND_TEMP_OZONEPM2.5)
 
 #11
-
+write.csv(EPA_AIR_BOUND_TEMP_OZONEPM2.5,
+row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 
 ```
 
@@ -124,15 +191,17 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 ```{r questions 12 and 13}
 
 #12
+EPA_AIR_NC_SUMMARIES <- EPA_AIR_BOUND_TEMP_OZONEPM2.5 %>% group_by(Site.Name,
+      month, year) %>% summarise(MeanAQI_Ozone = mean(Ozone),
+    MeanAQI_PM2.5 = mean(PM2.5)) %>% drop_na(MeanAQI_Ozone)
 
+#13 
 
-#13
-
-
+dim(EPA_AIR_NC_SUMMARIES)
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`? Hint: replace `drop_na` with `na.omit` in part 12 and observe what happens with the dimensions of the summary date frame.
 
-> Answer: 
+> Answer: drop_na will delete all of the rows that contain NA in the column of interest, which in this case, is ozone. na_omit will drop all NAs from the dataset, regardless of the column specification. In this case, it also dropped the NAs in PM2.5, which drastically reduced the dataset. 
 
